@@ -20,10 +20,19 @@
 				<include>*.jar</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>target/lib</directory>
+			<outputDirectory>bin</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>		
 	</fileSets>
+	<!-- 
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>bin</outputDirectory>
 		</dependencySet>
 	</dependencySets>
+	 -->
 </assembly>

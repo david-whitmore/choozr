@@ -47,6 +47,44 @@
 
 	<build>
 		<plugins>
+		
+			<!-- Creates a manifest for the jar file so that it's executable. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>.</classpathPrefix>
+							<mainClass>org.dw.Choozr</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<!-- Copies the dependencies to the ${build}/lib directory. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.directory}/lib
+							</outputDirectory>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Package the whole lot up as a zip file. -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.5.3</version>
@@ -54,11 +92,6 @@
 					<descriptors>
 						<descriptor>assembly.xml</descriptor>
 					</descriptors>
-					<archive>
-						<manifest>
-							<mainClass>org.dw.Choozr</mainClass>
-						</manifest>
-					</archive>
 				</configuration>
 				<executions>
 					<execution>
