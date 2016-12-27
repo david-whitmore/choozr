@@ -1,16 +1,13 @@
 package org.dw;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +18,21 @@ import org.apache.commons.lang.StringUtils;
  * @author David Whitmore
  */
 public class Shuffler {
+	/** Shuffles the file, and returns all of the lines. */
+	public List<String> shuffle(Reader in) throws IOException {
+		try (BufferedReader buff = new BufferedReader(in)) {
+			List<String> lines = buff.lines().collect(Collectors.toList());
+
+			lines = discardHeader(lines);
+			lines = discardBlankLines(lines);
+
+			Collections.shuffle(lines);
+
+			return lines;
+		}
+	}
+
+	/** Shuffles the file, and returns the first <em>n</em> lines. */
 	public List<String> shuffle(int n, Reader in) throws IOException {
 		try (BufferedReader buff = new BufferedReader(in)) {
 			List<String> lines = buff.lines().collect(Collectors.toList());
@@ -28,21 +40,9 @@ public class Shuffler {
 			lines = discardHeader(lines);
 			lines = discardBlankLines(lines);
 
-			Random random = new Random(System.currentTimeMillis());
-			List<String> choices = newArrayList();
+			Collections.shuffle(lines);
 
-			for (int i = 0; i < n; i++) {
-				if (lines.isEmpty()) {
-					break;
-				}
-
-				int index = random.nextInt(lines.size());
-
-				choices.add(lines.get(index));
-				lines.remove(index);
-			}
-
-			return choices;
+			return lines.subList(0, n);
 		}
 	}
 
@@ -58,39 +58,27 @@ public class Shuffler {
 	public static void main(String[] args) throws IOException {
 		Shuffler shuffler = new Shuffler();
 
-		switch (args.length) {
-		case 1:
-			shuffleFromStandardInput(args, shuffler);
-			break;
-		case 2:
-			shuffleFromFile(args, shuffler);
-			break;
-		default:
-			throw new RuntimeException(
-					"Invalid syntax.  Try: shuffle <numberOfItemsToChoose> <file> OR chooze <numberOfItemsToChoose> < fileStream.");
+		if (args.length == 2) {
+			shuffle(args, shuffler);
+			return;
 		}
+
+		throw new RuntimeException(
+				"Invalid syntax.  Try: shuffle <numberOfItemsToChoose> <file> OR chooze <numberOfItemsToChoose> < fileStream.");
 	}
 
-	private static void shuffleFromStandardInput(String[] args, Shuffler choozr) throws IOException {
-		int n = Integer.parseInt(args[0].trim());
-
-		try (InputStreamReader in = new InputStreamReader(System.in)) {
-			choozr.shuffle(n, in);
-		}
-	}
-
-	private static void shuffleFromFile(String[] args, Shuffler choozr) throws IOException, FileNotFoundException {
+	private static void shuffle(String[] args, Shuffler shuffler) throws IOException, FileNotFoundException {
 		int n = Integer.parseInt(args[0].trim());
 		File file = new File(args[1].trim());
 
 		try (Reader in = new FileReader(file)) {
-			List<String> choices = choozr.shuffle(n, in);
+			List<String> shuffledLines = shuffler.shuffle(n, in);
 
-			outputChoices(choices);
+			outputLines(shuffledLines);
 		}
 	}
 
-	private static void outputChoices(List<String> choices) {
+	private static void outputLines(List<String> choices) {
 		choices.stream().forEach(x -> System.out.println(x));
 	}
 }
