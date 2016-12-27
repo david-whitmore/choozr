@@ -23,7 +23,6 @@ public class Shuffler {
 		try (BufferedReader buff = new BufferedReader(in)) {
 			List<String> lines = buff.lines().collect(Collectors.toList());
 
-			lines = discardHeader(lines);
 			lines = discardBlankLines(lines);
 
 			Collections.shuffle(lines);
@@ -37,7 +36,6 @@ public class Shuffler {
 		try (BufferedReader buff = new BufferedReader(in)) {
 			List<String> lines = buff.lines().collect(Collectors.toList());
 
-			lines = discardHeader(lines);
 			lines = discardBlankLines(lines);
 
 			Collections.shuffle(lines);
@@ -48,11 +46,6 @@ public class Shuffler {
 
 	private List<String> discardBlankLines(List<String> lines) {
 		return lines.stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
-	}
-
-	private List<String> discardHeader(List<String> lines) {
-		lines.remove(0);
-		return lines;
 	}
 
 	public static void main(String[] args) throws IOException {
