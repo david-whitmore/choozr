@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Main class to choose <em>n</em> lines from a text file.
+ * Main class to shuffle the lines in a text file, and output the result.
  * 
  * @author David Whitmore
  */
-public class Choozr {
-	public List<String> choose(int n, Reader in) throws IOException {
+public class Shuffler {
+	public List<String> shuffle(int n, Reader in) throws IOException {
 		try (BufferedReader buff = new BufferedReader(in)) {
 			List<String> lines = buff.lines().collect(Collectors.toList());
 
@@ -56,35 +56,35 @@ public class Choozr {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Choozr choozr = new Choozr();
+		Shuffler shuffler = new Shuffler();
 
 		switch (args.length) {
 		case 1:
-			choozeFromStandardInput(args, choozr);
+			shuffleFromStandardInput(args, shuffler);
 			break;
 		case 2:
-			choozeFromFile(args, choozr);
+			shuffleFromFile(args, shuffler);
 			break;
 		default:
 			throw new RuntimeException(
-					"Invalid syntax.  Try: chooze <numberOfItemsToChoose> <file> OR chooze <numberOfItemsToChoose> < fileStream.");
+					"Invalid syntax.  Try: shuffle <numberOfItemsToChoose> <file> OR chooze <numberOfItemsToChoose> < fileStream.");
 		}
 	}
 
-	private static void choozeFromStandardInput(String[] args, Choozr choozr) throws IOException {
+	private static void shuffleFromStandardInput(String[] args, Shuffler choozr) throws IOException {
 		int n = Integer.parseInt(args[0].trim());
 
 		try (InputStreamReader in = new InputStreamReader(System.in)) {
-			choozr.choose(n, in);
+			choozr.shuffle(n, in);
 		}
 	}
 
-	private static void choozeFromFile(String[] args, Choozr choozr) throws IOException, FileNotFoundException {
+	private static void shuffleFromFile(String[] args, Shuffler choozr) throws IOException, FileNotFoundException {
 		int n = Integer.parseInt(args[0].trim());
 		File file = new File(args[1].trim());
 
 		try (Reader in = new FileReader(file)) {
-			List<String> choices = choozr.choose(n, in);
+			List<String> choices = choozr.shuffle(n, in);
 
 			outputChoices(choices);
 		}
