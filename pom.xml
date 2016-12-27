@@ -57,7 +57,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>.</classpathPrefix>
-							<mainClass>org.dw.Choozr</mainClass>
+							<mainClass>org.dw.Shuffler</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

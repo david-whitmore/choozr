@@ -13,8 +13,9 @@
 			<directory>src/main/scripts</directory>
 			<outputDirectory>.</outputDirectory>
 			<includes>
-				<include>*.sh</include>
+				<include>*</include>
 			</includes>
+			<fileMode>0755</fileMode>
 		</fileSet>
 		<fileSet>
 			<directory>target</directory>
@@ -22,6 +23,7 @@
 			<includes>
 				<include>*.jar</include>
 			</includes>
+			<fileMode>0755</fileMode>
 		</fileSet>
 		<fileSet>
 			<directory>target/lib</directory>
@@ -29,6 +31,7 @@
 			<includes>
 				<include>*.jar</include>
 			</includes>
-		</fileSet>		
+			<fileMode>0755</fileMode>
+		</fileSet>
 	</fileSets>
 </assembly>
